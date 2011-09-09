@@ -1,0 +1,8 @@
+- Add a test suite
+ - Trivial conflicted merge
+ - user A merges, pushes, user B merges
+ - user A merges, resolves, pushes, user B merges
+ - handling of typechange conflicts
+ - Weird cases for handling of extensions
+- Fix handling of typechange conflicts
+- Fix handling when the (conflicted) name already exists
