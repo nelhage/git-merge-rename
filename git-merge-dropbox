@@ -1,0 +1,40 @@
+#!/bin/bash
+git merge-recursive "$@"
+err=$?
+
+while [ "$#" -gt 0 ] && [ "$1" != "--" ]; do
+    shift
+done
+shift
+head=$1
+remote=$2
+
+if [ "$err" -eq 0 ] || [ "$err" -eq 128 ]; then
+    exit "$err"
+fi
+
+set -e
+
+git ls-files -u | while IFS=$'\t' read metadata path; do
+    set -- $metadata
+    mode=$1
+    sha=$2
+    stage=$3
+    if [ "$stage" -eq 3 ]; then
+        base="${path%.*}"
+        extn="${path##*.}"
+        if [ "$extn" != "$path" ]; then
+            extn=".$extn"
+        else
+            extn=""
+        fi
+        conflict=$(git log -1 --format="$base (%an's version of %ad - %h)$extn" \
+            $remote -- $path)
+        git cat-file blob "$remote:$path" > "$conflict"
+        git checkout --ours "$path"
+        git add "$path"
+        git add "$conflict"
+    fi
+done
+
+exit 0

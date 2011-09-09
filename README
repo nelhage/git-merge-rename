@@ -1,0 +1,13 @@
+git-merge-rename -- Resolve merges by forking the file
+======================================================
+
+git-merge-rename is a custom merge strategy, inspired by Dropbox's
+conflict-handling, which resolves merges by creating two copies of the
+conflicted file, leaving the original copy in place, and copying the
+other side's version into a renamed path.
+
+Barring error conditions (e.g. out of disk), merges using this merge
+strategy should never fail, which should potentially make it
+attractive for introducing new users to git, since they can safely
+"git pull" without fear of entering the dreaded (by novices)
+conflicted-merge state.
